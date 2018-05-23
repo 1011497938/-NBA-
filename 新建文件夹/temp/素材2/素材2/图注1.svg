@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="164.97px" height="165.612px" viewBox="0 0 164.97 165.612" enable-background="new 0 0 164.97 165.612"
+	 xml:space="preserve">
+<rect x="56.851" y="47.695" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -28.9572 82.8585)" fill="#F22525" width="57.378" height="57.378"/>
+<line fill="none" stroke="#727171" stroke-width="0.2779" x1="85.54" y1="146.433" x2="105.557" y2="146.433"/>
+<line fill="none" stroke="#727171" stroke-width="0.2779" x1="105.557" y1="146.433" x2="111.022" y2="140.968"/>
+<text transform="matrix(1 0 0 1 124.48 99.4152)" fill="#3E3A39" font-family="'HYYuanLongHei-CEJ'" font-size="7.1282">新疆队比分</text>
+<text transform="matrix(1 0 0 1 118.3833 138.9767)" fill="#3E3A39" font-family="'HYYuanLongHei-CEJ'" font-size="7.1282">周琦得分</text>
+<rect x="56.851" y="77.325" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -49.9092 91.5368)" fill="#DCDDDD" width="57.378" height="57.378"/>
+<rect x="71.387" y="112.416" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -64.4444 97.5577)" fill="#727171" width="28.308" height="28.308"/>
+<line fill="none" stroke="#727171" stroke-width="0.2779" x1="86.634" y1="87.434" x2="115.618" y2="87.434"/>
+<line fill="none" stroke="#727171" stroke-width="0.2779" x1="115.618" y1="87.434" x2="120.241" y2="92.058"/>
+<text transform="matrix(1 0 0 1 26.9429 76.0002)" fill="#3E3A39" font-family="'HYYuanLongHei-CEJ'" font-size="6.6693">胜</text>
+<text transform="matrix(1 0 0 1 26.9429 108.2492)" fill="#3E3A39" font-family="'HYYuanLongHei-CEJ'" font-size="6.6693">负</text>
+<g>
+	<g>
+		<line fill="none" stroke="#C9CACA" stroke-width="0.5102" x1="15.544" y1="34.966" x2="15.544" y2="152.115"/>
+		<g>
+			<polygon fill="#C9CACA" points="13.655,36.399 15.544,35.596 17.434,36.399 15.544,31.92 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#C9CACA" stroke-width="0.5102" x1="15.544" y1="152.115" x2="160.633" y2="152.115"/>
+		<g>
+			<polygon fill="#C9CACA" points="159.2,154.005 160.003,152.115 159.2,150.226 163.679,152.115 			"/>
+		</g>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 67.7475 164.6701)" font-family="'HYYuanLongHei-CEJ'" font-size="7.1282">常规赛轮次</text>
+<text transform="matrix(0 -1 1 0 6.9136 103.7883)" font-family="'HYYuanLongHei-CEJ'" font-size="7.1282">实时排名</text>
+<g>
+	<text transform="matrix(1 0 0 1 54.3481 9.423)" fill="#231815" font-family="'FZLTXHK'" font-size="10.8849">如何阅读图表：</text>
+</g>
+</svg>

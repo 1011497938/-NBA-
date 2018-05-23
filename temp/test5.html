@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+text{
+  font-size: 15px;
+}
+.axis path,  
+.axis line{  
+    fill: none;  
+    stroke: black;  
+    shape-rendering: crispEdges;  
+}  
+  
+.axis text {  
+    font-family: sans-serif;  
+    font-size: 11px;  
+}  
+</style>
+
+<body>
+</body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<script>
+  var startX = 100,
+      startY = 100;  
+  var width = 1080,
+      height = 800;
+
+  var floor = function(d){
+    return Math.floor(d);
+  } 
+
+
+
+  var svg = d3.select("body").append('svg')
+              .attr("width",width)
+              .attr("height",height);
+
+  var xScale = function( x ){
+        scale = d3.scale.linear()
+                  .domain([0,dataMax])
+                  .range([0,width-startX-padding]);
+
+        return Math.floor(scale(x));
+  }
+
+
+d3.csv("NBAdraft.csv", function(error,csvdata){
+  if(error){
+    console.log(error);
+  }
+  //Name,Position,Lane,Shuttle,Court,StandL,MaxL,Bench
+
+
+  var color = d3.scale.category10();
+  var PositionColor = 
+  {
+    SG:color(0),
+    C:color(1),
+    PF:color(2),
+    PG:color(3),
+    SF:color(4)
+  };
+
+  var BarWidth = 100;
+  var Left = (width- BarWidth * 1.7) / 4;
+  var X = 50;
+
+  var drawIqr = function(kind,data,X){
+    var scale = d3.scale.linear()
+                  .domain([data[0],data[4]])
+                  .range([height-100,50]);
+
+    // console.log(scale(data[0]) + ' ' + scale(data[4]))
+    var ZhouQiy;
+    // 画球员 Zhou Qi
+    svg.selectAll('.'+kind)
+        .data(csvdata)
+        .enter()
+        .append("rect")
+        .attr('x', function(d,i){
+            return X + BarWidth * Math.random();
+        })
+        .attr('y', function(d,i){
+            if ( d.Name ==  'Zhou Qi') ZhouQiy = scale(d[kind]);
+            return scale(d[kind]);
+        })
+        .attr('height', 10)
+        .attr('width',10)
+        .attr('fill', function(d,i){
+          var position = d.Position.split('0')[0];
+          return PositionColor[position];
+        })
+        .attr('class',function(d,i){
+          var position = d.Position.split('0');
+          var Class = kind;
+          for (var i = 0; i < position.length; i++) {
+             Class += ' ' + position[i] ;
+          }
+          return Class;
+        })
+        .style('opacity',0);
+
+
+
+    // 画箱线图
+    {
+      svg.selectAll('.'+ kind +'Iqr')
+         .data(data)
+         .enter()
+         .append('line')
+         .attr('y1',function(d,i){
+          // console.log(scale(d));
+            return scale(d);
+         })
+         .attr('x1',X-10)
+         .attr('x2',X+10+BarWidth)
+         .attr('y2',function(d,i){
+            return scale(d);
+         })
+         .attr('stroke','black')
+         .attr('class',kind +'Iqr')
+         .attr('stroke-width',1);
+
+      svg.append('line')
+         .attr('y1',function(d,i){
+            return scale(data[1]);
+         })
+         .attr('x1',X-10)
+         .attr('x2',X-10)
+         .attr('y2',scale(data[3]))
+         .attr('stroke','black')
+         .attr('class',kind +'Iqr')
+         .attr('stroke-width',1);
+
+      svg.append('line')
+         .attr('y1',scale(data[1]))
+         .attr('x1',X+10+BarWidth)
+         .attr('x2',X+10+BarWidth)
+         .attr('y2',scale(data[3]))
+         .attr('stroke','black')
+         .attr('class',kind +'Iqr')
+         .attr('stroke-width',1);
+
+      svg.append('line')
+         .attr('y1',scale(data[0]))
+         .attr('x1',X+BarWidth/2)
+         .attr('x2',X+BarWidth/2)
+         .attr('y2',scale(data[1]))
+         .attr('stroke','black')
+         .attr('class',kind +'Iqr')
+         .attr('stroke-width',1);
+
+      svg.append('line')
+         .attr('y1',scale(data[3]))
+         .attr('x1',X+BarWidth/2)
+         .attr('x2',X+BarWidth/2)
+         .attr('y2',scale(data[4]))
+         .attr('stroke','black')
+         .attr('class',kind +'Iqr')
+         .attr('stroke-width',1);      
+    }
+    // console.log(ZhouQiy);
+    var ZhouQix = X + BarWidth * Math.random()
+    svg.append('rect')
+        .attr('x', ZhouQix)
+        .attr('y',ZhouQiy)
+        .attr('height', 10)
+        .attr('width',10)
+        .attr('fill','red')
+        .attr('transform',function(){
+          return 'rotate(45,' + ZhouQix + ' ' + ZhouQiy + ')';
+        })
+        .style('opacity',1);
+
+    // var xScale = d3.scale.linear()  
+    //                     .domain([data[0],data[4]])  
+    //                     .range([0,500]);  
+                          
+    // var axis = d3.svg.axis()  
+    //                 .scale(xScale)  
+    //                 .orient("right");  
+                      
+    // svg.append("g")  
+    //     .attr("class","axis")  
+    //     .attr("transform","translate(20,160)")  
+    //     .call(axis);  
+  }
+  //四分之三全场冲刺
+  {
+    var kind = 'Court'
+    var data = [2.96,3.2,3.28,3.38,3.81];
+    drawIqr(kind,data,X);
+  }
+  //灵活性测试
+  {
+    data = [10.07,10.98,11.3,11.72,13.44];
+    kind = 'Lane';
+    X += Left;
+    drawIqr(kind,data,X);              
+  }
+  //折返跑
+  {
+    data = [2.64,2.93,3.06,3.18,3.7];
+    kind = 'Shuttle';
+    X += Left;
+    drawIqr(kind,data,X);              
+  }
+  //站立高度 
+  {
+    data = [20.5,27.5,29.5,31.5,39.5];
+    kind = 'StandL';
+    X += Left;
+    drawIqr(kind,data,X);              
+  }
+
+  //弹跳
+  {
+    data = [25,32,35,37.25,44];
+    kind = 'MaxL';
+    X += Left;
+    drawIqr(kind,data,X);              
+  }
+
+  var selectBarWith = 90,
+      padding = 130;
+
+  var X = 10;
+  svg.selectAll('.selectBar')
+     .data(['SG','C','PF','PG','SF'])
+     .enter()
+     .append('line')
+     .attr('y1',  height - 30)
+     .attr('x1', function(d,i){
+        return width - padding * i;
+     })
+     .attr('x2', function(d,i){
+        return width - padding * i - selectBarWith;
+     })
+     .attr('y2', height-30)
+     .attr('stroke',function(d,i){
+        return PositionColor[d];
+     })
+     .attr('class','selectBar')
+     .attr('stroke-width',selectBarWith)
+     .style('opacity','0.2');
+
+  svg.selectAll('.selectText')
+     .data(['得分后卫','中锋','大前锋','控球后卫','小前锋'])
+     .enter()
+     .append('text')
+     .attr('y',  height - 30)
+     .attr('x', function(d,i){
+        return width - padding * i - selectBarWith/2 - 29;
+     })
+     .attr('class',function(d,i){
+        return 'Select' + ' ' + d;
+     })
+     .text(function(d){  
+        return d;  
+     });
+
+  var condition = {
+    SG: false,
+    C: false,
+    PF:false,
+    PG:false,
+    SF:false
+  }
+
+  svg.selectAll('.selectBar')
+     .on('click',function(d,i){
+        var thisPositon = svg.selectAll('.'+d);
+        if ( condition[d]) {
+          condition[d] = false;
+          thisPositon.transition().style('opacity',0)
+        }else{
+          condition[d] = true;
+          thisPositon.transition().style('opacity',0.4).attr('fill', PositionColor[d]);
+        }
+     })
+
+  });
+
+</script>

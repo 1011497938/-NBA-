@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+text{
+  font-size: 15px;
+}
+.iqr{
+    stroke-width: 17;
+    stroke: #bdbaba;
+}
+.scoreLine{
+  fill: none;
+  stroke: #847f7f; /*轮廓*/
+  shape-rendering: crispEdges; /*边缘清晰*/
+  stroke-width: 1;
+}
+.x-axis{
+  stroke-width: 0.5;
+  stroke: #dad7d7;
+}
+.circleName{
+  font-size: 12px;
+}
+</style>
+
+<body>
+</body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<script>
+d3.csv("NBAdraft.csv", function(error,csvdata){
+  if(error){
+    console.log(error);
+  }
+  //Name,Position,Lane,Shuttle,Court,StandL,MaxL,Bench
+  //
+  
+
+  var avg_Lane = 0,
+      avg_Shuttle = 0,
+      avg_Court = 0,
+      avg_StandL = 0,
+      avg_MaxL = 0,
+      avg_Bench = 0;
+
+  var LaneNum = 0,
+      ShuttleNum = 0,
+      CourtNum = 0,
+      StandLNum = 0,
+      MaxLNum = 0,
+      BenchNum = 0;
+
+  for (var i = 0; i < csvdata.length; i++) {
+    let Name = csvdata[i].length,
+        Position = csvdata[i].Position,
+        Lane = csvdata[i].Lane,
+        Shuttle = csvdata[i].Shuttle,
+        Court = csvdata[i].Court,
+        StandL = csvdata[i].StandL,
+        MaxL = csvdata[i].MaxL,
+        Bench = csvdata[i].Bench;
+
+    if ( Lane != 0) {
+      avg_Lane += Lane*1;  
+      LaneNum += 1;    
+    }
+
+    if ( Shuttle != 0) {
+      avg_Shuttle += Shuttle*1;  
+      ShuttleNum += 1;    
+    }
+
+    if ( Court != 0) {
+      avg_Court += Court*1;  
+      CourtNum += 1;    
+    }
+
+    if ( StandL != 0) {
+      avg_StandL += StandL*1;  
+      StandLNum += 1;    
+    }
+
+    if ( MaxL != 0) {
+      avg_MaxL += MaxL*1;  
+      MaxLNum += 1;    
+    }
+
+    if ( Bench != 0) {
+      avg_Bench += Bench*1;  
+      BenchNum += 1;    
+    }
+
+  }
+  // console.log( LaneNum + ' ' + BenchNum + ' ' + CourtNum + ' ' + ShuttleNum + ' ' + MaxLNum + ' ' + StandLNum);
+  // console.log( avg_Lane + ' ' + avg_Bench + ' ' + avg_Court + ' ' + avg_Shuttle + ' ' + avg_MaxL + ' ' + avg_StandL);
+  avg_Lane /= LaneNum;
+  avg_Shuttle /= ShuttleNum;
+  avg_Court /= CourtNum;
+  avg_StandL /= StandLNum;
+  avg_MaxL /= MaxLNum;
+  avg_Bench /= BenchNum;
+
+  // console.log( avg_Lane + ' ' + avg_Bench + ' ' + avg_Court + ' ' + avg_Shuttle + ' ' + avg_MaxL + ' ' + avg_StandL);
+
+  var m_Name = 0,
+      m_Position = 0,
+      m_Lane = 0,
+      m_Shuttle = 0,
+      m_Court = 0,
+      m_StandL = 0,
+      m_MaxL = 0,
+      m_Bench = 0;
+
+  for (var i = 0; i < csvdata.length; i++) {
+      let Name = csvdata[i].length,
+          Position = csvdata[i].Position,
+          Lane = csvdata[i].Lane,
+          Shuttle = csvdata[i].Shuttle,
+          Court = csvdata[i].Court,
+          StandL = csvdata[i].StandL,
+          MaxL = csvdata[i].MaxL,
+          Bench = csvdata[i].Bench;
+
+      if ( Lane != 0) {
+        m_Lane += Math.pow((Lane-avg_Lane),2)    
+      }
+
+      if ( Shuttle != 0) {
+        m_Shuttle += Math.pow((Shuttle-avg_Shuttle),2)      
+      }
+
+      if ( Court != 0) {
+        m_Court += Math.pow((-avg_Court),2)    
+      }
+
+      if ( StandL != 0) {
+        m_StandL += Math.pow((StandL-avg_StandL),2)    
+      }
+
+      if ( MaxL != 0) {
+        m_MaxL += Math.pow((MaxL-avg_MaxL),2)       
+      }
+
+      if ( Bench != 0) {
+        m_Bench += Math.pow((Bench-avg_Bench),2)     
+      }
+
+  }
+
+
+  m_Lane /= LaneNum;
+  m_Shuttle /= ShuttleNum;
+  m_Court /= CourtNum;
+  m_StandL /= StandLNum;
+  m_MaxL /= MaxLNum;
+  m_Bench /= BenchNum;
+
+  // m_Lane = Math.pow( m_Lane,1/2);
+  // m_Shuttle = Math.pow( m_Shuttle,1/2);
+  // m_Court = Math.pow( m_Court,1/2);
+  // m_StandL = Math.pow( m_StandL,1/2);
+  // m_MaxL = Math.pow( m_MaxL,1/2);
+  // m_Bench = Math.pow( m_Bench,1/2);
+
+  // console.log( m_Lane + ' ' + m_Bench + ' ' + m_Court + ' ' + m_Shuttle + ' ' + m_MaxL + ' ' + m_StandL);
+
+  var PlayerDist = [];
+  var text = '';
+
+  var Zhou = {};
+
+  Zhou.Lane = (11.27 - avg_Lane)/m_Lane;
+  Zhou.Shuttle= ( 2.9- avg_Shuttle)/m_Shuttle;
+  Zhou.Court= ( 3.46- avg_Court)/m_Court;
+  Zhou.StandL= ( 31.5- avg_StandL)/m_StandL;
+  Zhou.MaxL= ( 32- avg_MaxL)/m_MaxL;
+  Zhou.Bench= ( 0- avg_Bench)/m_Bench;
+  // console.log(Zhou);
+  for (var i = 0; i < csvdata.length; i++) {
+
+    let Name = csvdata[i].Name,
+        Position = csvdata[i].Position,
+        Lane = csvdata[i].Lane,
+        Shuttle = csvdata[i].Shuttle,
+        Court = csvdata[i].Court,
+        StandL = csvdata[i].StandL,
+        MaxL = csvdata[i].MaxL,
+        Bench = csvdata[i].Bench; 
+
+    if ( Name=='Jianlian Yi')
+      console.log( Lane + ' ' + Shuttle + ' ' + Court + ' ' + StandL + ' ' + MaxL + ' ' + Bench);
+
+    var Num = 0;
+    var Dist = 0;
+
+    if ( Lane != 0) {
+      Lane = (Lane - avg_Lane)/m_Lane;
+      Dist +=  Math.pow(Lane-Zhou.Lane,2);
+      Num++;   
+    }
+    // 11.27 2.9 3.46  31.5  32  0
+
+    if ( Shuttle != 0) {
+      Shuttle= ( Shuttle- avg_Shuttle)/m_Shuttle;
+      Dist += Math.pow(Shuttle-Zhou.Shuttle,2);
+      Num++;   
+    }
+
+    if ( Court != 0) {
+      Court= ( Court- avg_Court)/m_Court;
+      Dist += Math.pow(Court-Zhou.Court,2);
+      Num++;     
+    }
+
+    if ( StandL != 0) {
+      StandL= ( StandL- avg_StandL)/m_StandL;
+      Dist += Math.pow(StandL-Zhou.StandL,2);
+      Num++;     
+    }
+
+    if ( MaxL != 0) {
+      MaxL= ( MaxL- avg_MaxL)/m_MaxL;
+      Dist += Math.pow(MaxL-Zhou.MaxL,2);
+      Num++;     
+    }
+
+    if ( Name == 'Jianlian Yi'){
+      console.log( Lane + ' ' + Shuttle + ' ' + Court + ' ' + StandL + ' ' + MaxL);
+      console.log(Dist/Num);
+    }
+    PlayerDist[Name] = Math.abs(Dist/Num);
+    // console.log( Name + ' ' + Math.abs(Dist/Num));
+    if ( Num > 3)
+      text += Name + ',' + PlayerDist[Name] + ',' + Position + '\n';
+  }
+
+  console.log( text);
+});
+  
+</script>

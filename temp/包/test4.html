@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style type="text/css">
+line .CompareLine {
+  shape-rendering: crispEdges; /*边缘清晰*/
+  stroke-width: 11;
+}
+</style>
+<body>
+</body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 1000,
+    height = 1000;
+    svg_padding = 10;
+
+var lineLength = 80,
+    linePadingRight = 3,
+    stroke_width = 9;
+
+// var color = d3.HScale.category20();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var playerNum = 3;
+var Yao = [226, '#00b7e9', 292,'#70cde6',134],
+    Zhou = [218, '#da5926', 291, '#c38369',80],
+    Gobert = [216, '#8223e6', 297,'#9562ca',110]
+
+
+var Bar = function ( X0, X1, Y, color, width) {
+  var Num = Math.ceil( (X1-X0)/ ( stroke_width + linePadingRight));
+  for (let i = 0; i < Num; i++) {
+    svg.append("line")
+       .attr('x1', X0 + i * ( stroke_width + linePadingRight) )
+       .attr('y1', Y)
+       .attr('x2', X0 + i * ( stroke_width + linePadingRight) )
+       .attr('y2', Y + width)
+       .attr('stroke', color)
+       .attr('stroke-width', 11)
+       // .attr('class', 'CompareLine')
+  }
+}
+
+// Bar( 10,10,200,'#000');
+var MaxWeight = 134;
+var WScale = d3.scale.linear()
+                    .domain([0, MaxWeight])
+                    .range([0, lineLength]);
+
+var MaxHeight = 292;
+var HScale = d3.scale.linear()
+                    .domain([0, MaxHeight])
+                    .range([svg_padding, width - svg_padding]);
+
+console.log(HScale(0)+ ' ' + svg_padding);
+
+var Y = svg_padding;
+Bar( HScale(0), HScale(Yao[0]),Y,Yao[1], WScale(Yao[4]));
+Bar( HScale(Yao[0]), HScale(Yao[2]),Y,Yao[3], WScale(Yao[4]));
+
+Y += WScale(Yao[4]) + 10;
+Bar( HScale(0), HScale(Zhou[0]),Y,Zhou[1], WScale(Zhou[4]));
+Bar( HScale(Zhou[0]), HScale(Zhou[2]),Y,Zhou[3], WScale(Zhou[4]));
+
+Y += WScale(Zhou[4]) + 10;
+Bar( HScale(0), HScale(Gobert[0]),Y,Gobert[1], WScale(Gobert[4]));
+Bar( HScale(Gobert[0]), HScale(Gobert[2]),Y,Gobert[3], WScale(Gobert[4]));
+</script>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.box {
+  font: 10px sans-serif;
+}
+
+.box line,
+.box rect,
+.box circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.box .center {
+  stroke-dasharray: 3,3;
+}
+
+.box .outlier {
+  fill: none;
+  stroke: #ccc;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<script>
+  var svg = d3.select("body").append('svg')
+              .attr("width",4000)
+              .attr("height",4000);
+
+  var data = [0,1,2];
+
+ svg.selectAll('text')
+    .data(data)
+    .enter()
+    .append("text")
+    .attr('x', 100)
+    .attr('y', function(d,i){
+      return i * 30 + 30;
+    })
+    .text(function(d,i){
+      return d;
+    })
+  .attr('fill','#716d6d'); ;
+
+ svg.selectAll('text')
+    .data(data,[2,1,1,3])
+    .enter()
+    .append("text")
+    .attr('x', 300)
+    .attr('y', function(d,i){
+      return i * 30 + 30;
+    })
+    .text(function(d,i){
+      return d;
+    })
+  .attr('fill','#716d6d'); ;
+</script>

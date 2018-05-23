@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+text{
+  font-size: 15px;
+}
+.iqr{
+    stroke-width: 17;
+    stroke: #bdbaba;
+}
+.scoreLine{
+  fill: none;
+  stroke: #847f7f; /*轮廓*/
+  shape-rendering: crispEdges; /*边缘清晰*/
+  stroke-width: 2;
+}
+.x-axis{
+  stroke-width: 0.5;
+  stroke: #dad7d7;
+}
+.circleName{
+  font-size: 12px;
+}
+</style>
+
+<body>
+</body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<script>
+  // var floor = Math.floor();
+
+  //变向，折返跑，冲刺，弹跳，助跑跳，卧推，体脂，手长，手宽，身高有鞋，体重，臂展
+  var dataName = ["体重"];
+  var data = [[82.64,108.22,137.25,98.97]], 
+      //最小，中位，最大，周琦值
+      iqr = [[102.01,112.35]];  //四分位
+
+  var dataMax = 0;
+  var dataMin = 1000;
+  for (var i = 0; i < data.length; i++) {
+    if( data[i][2] > dataMax )
+      dataMax = data[i][2];
+    if( data[i][0] < dataMin )
+      dataMin = data[i][0];
+  }
+  var padding = 30;
+  var startX = 100,
+      startY = 100;  
+  var width = 1100,
+      height = startY +  data.length * padding * 2;
+  
+
+  var svg = d3.select("body").append('svg')
+              .attr("width",width)
+              .attr("height",height);
+
+  var xScale = function( x ){
+        scale = d3.scale.linear()
+                  .domain([dataMin,data[0][2]])
+                  .range([0,width-startX-padding]);
+
+        return Math.floor(scale(x));
+  }
+
+  var AxisXNum = 8;
+  //坐标轴
+  // console.log(dataMin + ' ' + dataMax);
+  var deltaAxisX = ((dataMax-dataMin) / AxisXNum).toFixed(0) ; ;
+  for (let i = 0; i <= AxisXNum; i++) {
+    svg.append("line")
+     .attr('x1', startX + xScale(deltaAxisX*i+dataMin))
+     .attr('y1', function () {
+
+        for (var j = 0; j < data.length; j++) {
+          let thisX = startX + xScale(data[j][2]);
+          if ( thisX >= (startX + xScale(deltaAxisX*i))) {
+            return startY + padding * 2 * j;
+          }
+        }
+        return 0;
+     })
+     .attr('x2',  startX + xScale(deltaAxisX*i+dataMin))
+     .attr('y2', startY +  data.length * padding * 2 - padding * 2 + 10)
+     .attr('class', 'x-axis'); 
+
+     svg.append("text")
+        .attr('x', startX + xScale(deltaAxisX*i+dataMin) - 20)
+        .attr('y', startY + data.length * padding * 2 - padding * 2 + 30)
+        .text(function(){
+          // console.log(dataMin + deltaAxisX*i)
+          return dataMin + deltaAxisX*i ;
+        })
+        .attr('fill','#716d6d'); ;
+  }
+
+  var circleName = ['Min','Mid','Max','周琦'];  
+  for (var i = 0; i < circleName.length; i++) {
+    svg.append("text")
+      .attr('x', function(){
+              return xScale(data[0][i]) + startX - 10;
+           })
+      .attr('y', startY - 12)
+      .text(function(){
+        return circleName[i] ;
+        // return '0';
+      })
+      .attr('class','circleName')
+      .attr('fill','#716d6d');    
+  }
+  
+
+
+  function BoxPlot( X, Y, data, iqr, dataName)
+  {  
+    // 名字
+     svg.append("text")
+        .attr('x', startX - 57)
+        .attr('y', function () {
+          return  Y + 7;
+        })
+        .text(function(){
+          return dataName ;
+        })
+        .attr('fill','#716d6d'); ;
+
+    //坐标线
+    svg.append("line")
+       .attr('x1', X+  xScale(data[0]))
+       .attr('y1', Y)
+       .attr('x2', function(){
+          return xScale(data[2]) + X;
+       })
+       .attr('y2', Y)
+       .attr('class', 'scoreLine');
+
+    //四分位线
+    svg.append("line")
+       .attr('x1', function(){
+          return xScale(iqr[0]) + X;
+       })
+       .attr('y1', Y)
+       .attr('x2', function(){
+          return xScale(iqr[1]) + X;
+       })
+       .attr('y2', Y)
+       .attr('class', 'iqr');
+
+    for (let i = 0; i < data.length; i++) {
+      svg.append("circle")
+         .attr('cx', function(){
+            // console.log(xScale(data[i]) + startX);
+            // console.log(xScale(data[i]) + X);
+            return xScale(data[i]) + X;
+
+         })
+         .attr('cy', Y)
+         .attr('r', function(){
+            // console.log( i + ' ' + data[i]);
+            if ( i == 1) 
+              return 9;
+            else
+              return 5;
+
+         })
+         .attr('fill', function(){
+            if( i == 3)
+              return '#3261c7';
+            else
+              return '#000';
+          })
+         .attr('stroke', '#fff')
+         .attr('stroke-width',0.5);
+    }
+  }
+
+  for (var i = 0; i < data.length; i++) {
+    BoxPlot( startX , startY+2*i*padding, data[i], iqr[i], dataName[i]);
+  }
+  
+
+
+</script>

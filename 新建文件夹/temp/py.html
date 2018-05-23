@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>HelloWorld</title> 
+
+<style>
+.axis path,
+.axis line{
+	opacity: 0.0;
+}
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+.line1 {
+	stroke:#CCCCCC;
+	stroke-width:1;
+}
+.line2 {
+	stroke:steelblue;
+	stroke-width:1;
+}
+.tooltip{
+	position: absolute;
+	width: auto;
+	height: auto;
+	color: white;
+	font-family: kaiti;
+	font-size: 14px;
+	text-align: left;
+	border-style: solid; 
+	border-width: 0px;
+	background-color: steelblue;
+	border-radius: 5px;
+}
+</style>
+</head> 
+    <body> 
+        <script src="d3.js" charset="utf-8"></script> 
+        <script>  
+var dataName = [];
+var dataPosition = [];
+var dataoX = [];
+var dataoY = [];
+
+
+
+		
+var width = 5000;
+var height = 4000;
+var svg = d3.select("body")
+			.append("svg")
+			.attr("width", width)
+			.attr("height", height);
+
+
+/*var linear1 = d3.scaleLinear()
+				.domain([0, 38])
+				.range([0, 1900]);
+var axisX = d3.axisBottom(linear1).ticks(3);	
+svg.append("g")
+	.attr("class","axis")//
+	.attr("transform","translate(60,450)")
+	.call(axisX);
+var linear2 = d3.scaleLinear()
+				.domain([1, 9])
+				.range([0, 400]);
+var axisY = d3.axisLeft(linear2).ticks(9);
+svg.append("g")
+	.attr("class","axis")//
+	.attr("transform","translate(40,50)")
+	.call(axisY);*/
+
+d3.csv("out.csv",function(error, data){
+    if(error){
+        console.log(error);
+    } else {
+        for(let i=0;i<data.length;i++){
+			dataName.push(data[i].Name);
+			dataPosition.push(data[i].Position);
+			dataoX.push(data[i].X);
+			dataoY.push(data[i].Y);
+        }
+    }
+
+
+svg.selectAll("rect")
+	.data(dataName)
+	.enter()
+	.append("rect")
+	.attr("x",function(d,i){ 
+		 return (dataoX[i] + 10) * 10 + 110;
+	})
+	.attr("y",function(d,i){
+		 return (dataoY[i] + 10) * 10 + 100;
+	});
+var tooltip = d3.select("body")
+				.append("div")
+				.attr("class","tooltip")
+				.style("opacity",0.0);
+svg.selectAll("rect")
+	.attr("width",function(d,i){
+      return 2;
+    })
+    .attr("height",function(d,i){
+      return 2;
+    })
+    .attr("fill",function(d,i){
+		return dataName[i]=='Zhou Qi'?'red':'steelblue';
+	})
+	.on("mouseover",function(d, i){
+		tooltip.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY + 20) + "px")
+				.style("opacity",1.0)
+				.html(dataName[i]);
+	})
+	.on("mouseout",function(d, i){
+		tooltip.style("opacity",0.0);
+	})
+	;
+
+});
+        </script> 
+    </body> 
+</html>
